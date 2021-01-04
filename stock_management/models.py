@@ -39,7 +39,7 @@ class Stock(models.Model):
 		return self.item_name
 
 class StockHistory(models.Model):
-	category = models.CharField(max_length=50, blank=True, null=True)
+	category = models.CharField(max_length=51, blank=True, null=True)
 	item_name = models.CharField(max_length=50, blank=True, null=True)
 	quantity = models.IntegerField(default='0', blank=True, null=True)
 	receive_quantity = models.IntegerField(default='0', blank=True, null=True)
