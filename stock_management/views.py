@@ -214,7 +214,7 @@ def request_items(request, pk):
         request_history = StockRequestHistory(
             # id=instance.id,
             last_updated=instance.last_updated,
-            category=instance.category.name,
+            category=instance.category_id,
             item_name=instance.item_name,
             quantity=instance.quantity,
             request_by=instance.request_by,
