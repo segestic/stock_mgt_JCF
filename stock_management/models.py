@@ -33,7 +33,7 @@ class Stock(models.Model):
 	last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 	export_to_CSV = models.BooleanField(default=False)
-	approval = models.CharField(max_length=10, blank=True, null=True)
+	approval = models.CharField(max_length=10, blank=True, null=False)
 
 	def __str__(self):
 		return self.item_name
