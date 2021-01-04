@@ -204,7 +204,7 @@ def request_items(request, pk):
         instance = form.save(commit=False)
         # if the form is valid, then save into record the new issue quantity
         # then after saving the new issue quantity, subtract it from issue quantity by the code below
-        # instance.quantity -= instance.issue_quantity
+        instance.category = instance.category
         instance.request_by = str(request.user)
         messages.success(request, str(instance.item_name) + " " + "Requested SUCCESSFULLY. ")
         # then after the calculation also save the instance i.e the new quantity and every updated instance/record in that row.
