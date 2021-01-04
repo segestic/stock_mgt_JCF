@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h4>{{queryset.item_name}}</h4>
+
+    {% if not request.user.is_manager %}
+<a href="{% url 'request_items' queryset.id %}"><div class='btn btn-secondary'>REQUEST THIS ITEM</div></a>
+    {% else %}
+<a href="{% url 'receive_items' queryset.id %}"><div class='btn btn-primary'>RECEIVE THIS ITEM</div></a>
+
+    {% endif %}
+
+  <br><br>
+<div class="display_table">
+<table class='table'>
+                  <tr>
+                   <thead>
+                    <th>ITEM NAME</th>
+                    <th>LAST UPDATED</th>
+                   </thead>
+                  <tr>
+                    <td>{{queryset.item_name}}</td>
+                    <td>{{queryset.last_updated}}</td>
+                  </tr>
+          </table>
+</div>
+
+{% endblock %}

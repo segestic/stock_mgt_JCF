@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} m-2" id="msg" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="header"{{title}}> </div>
+
+<form method='POST' action=''>{% csrf_token %}
+		{{form|crispy}}
+    <input class="btn btn-info" type="submit" value="Search" />
+    </form>
+<!--        <input type="submit" value='Search'/>-->
+
+<div class="display_table">
+ 	<table class='table'>
+		<thead>
+          <tr>
+            <th>COUNT</th>
+            <th>CATEGORY</th>
+            <th>ITEM NAME</th>
+            <th>REQUEST</th>
+          </tr>
+        </thead>
+      {% for instance in queryset %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{instance.category}}</td>
+            <td><a href="{% url 'stock_detail' instance.id %}">{{instance.item_name}}</a></td>
+            <td><a href="{% url 'stock_detail' instance.id %}">
+                {% if request.user.is_manager %}
+                <div class="btn btn-info">Receive</div></a></td>
+              {% else %}
+              <div class="btn btn-danger"></i>Request</div></a>
+              {% endif %}
+              </td>
+          </tr>
+      {% endfor %}
+    </table>
+</div>
+{% endblock %}

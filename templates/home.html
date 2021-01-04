@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+{% if request.user.is_authenticated %}
+
+<p>Click on the above links to start</p>
+
+{% else %}
+<p>Click to Login <a href="{% url 'auth_login' %}">Login</a>!</p>
+<p>Not  a member? <a href="{% url 'registration_register' %}">Register</a>!</p>
+
+{% endif %}
+
+
+
+
+{% endblock %}
