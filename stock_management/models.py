@@ -53,6 +53,8 @@ class StockHistory(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
 	approval = models.CharField(max_length=50, blank=True, null=True)
 
+	def __str__(self):
+		return self.item_name
 
 class StockRequestHistory(models.Model):
 	category = models.CharField(max_length=50, blank=True, null=True)
@@ -69,5 +71,7 @@ class StockRequestHistory(models.Model):
 	timestamp = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
 	approval = models.CharField(max_length=10, blank=False, null=True)
 
+	def __str__(self):
+		return self.item_name
 
 
