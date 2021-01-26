@@ -23,20 +23,16 @@
 		<thead>
           <tr>
             <th>COUNT</th>
-<!--            <th>ID</th>-->
             <th>CATEGORY</th>
             <th>ITEM NAME</th>
             <th>REQUEST QUANTITY</th>
-<!--            <th>REORDER LEVEL</th>-->
             <th>REQUEST TIME</th>
             <th>APPROVED STATUS</th>
-<!--            <th>LAST UPDATED</th>-->
           </tr>
         </thead>
       {% for instance in queryset %}
           <tr>
             <td>{{forloop.counter}}</td>
-<!--            <td>{{forloop.id}}</td>-->
             <td>{{instance.category}}</td>
             <td>{{instance.item_name}}</a></td>
             <td>{{instance.request_quantity}}</a></td>

@@ -204,17 +204,15 @@ def request_items(request, pk):
         instance = form.save(commit=False)
         # if the form is valid, then save into record the new issue quantity
         # then after saving the new issue quantity, subtract it from issue quantity by the code below
-        # instance.category = instance.category
+        # instance.quantity -= instance.issue_quantity
         instance.request_by = str(request.user)
         messages.success(request, str(instance.item_name) + " " + "Requested SUCCESSFULLY. ")
-        # then after the calculation also save the instance i.e the new quantity and every updated instance/record in that row.
-        instance.quantity -= instance.request_quantity
-        instance.save()
+        # instance.save()
         # here we are calling an entire model here StockHistory to write/record the following parameters into its own database
         request_history = StockRequestHistory(
-            # id=instance.id,
+            stock_id=instance.id,
             last_updated=instance.last_updated,
-            category=instance.category,
+            category=instance.category.name,
             item_name=instance.item_name,
             quantity=instance.quantity,
             request_by=instance.request_by,
@@ -245,9 +243,10 @@ def receive_items(request, pk):
         # if form is valid, first save the instance temporarily (don't comit) then do calculation(substraction), then save the instance again
         instance = form.save(commit=False)
         instance.quantity += instance.receive_quantity
+        instance.receive_by = str(request.user)
         instance.save()
         receive_history = StockHistory(
-            # id=instance.id,
+            # stock_id=instance.id,
             last_updated=instance.last_updated,
             category=instance.category,
             item_name=instance.item_name,
@@ -259,7 +258,8 @@ def receive_items(request, pk):
         messages.success(request, "Received SUCCESSFULLY. " + str(instance.quantity) + " " + str(
             instance.item_name) + "s now in Store")
 
-        return redirect('/stock_detail/' + str(instance.id))
+        return redirect('list_item')
+        # return redirect('/stock_detail/' + str(instance.id))
     # return HttpResponseRedirect(instance.get_absolute_url())
     context = {
         "title": 'Receive ' + str(queryset.item_name),
@@ -298,7 +298,7 @@ def list_history(request):
         "title": title,
         "queryset": queryset,
     }
-    return render(request, "list_history.html", context)
+    return render(request, "purchase_history.html", context)
 
 @login_required
 # @manager_only
@@ -318,20 +318,18 @@ from itertools import chain
 @login_required
 @manager_only
 def approve_items(request, pk):
-    queryset = StockRequestHistory.objects.get(id=pk)
-    # queryset = Stock.objects.filter(id=pk)
-    # q2 = StockRequestHistory.objects.get(id=pk)
-    # q2.values_list("approval") |     # queryset.union(q2.approval) |     # queryset = chain(q1, q2.approval)
-    # queryset = queryset | q2 |     # queryset.stockrequesthistory_set.add(q2)
-        #all()  |         # add(q2)   |     # q2 = StockRequestHistory.objects.filter(id=pk)
-    # q2 = q2.objects.all().values("approval")  |     # queryset = queryset.union(q2)
+    # this_stock = Stock.objects.get(id=pk)
     if request.method == 'POST':
+        queryset = StockRequestHistory.objects.get(id=pk)
+        this_stock = Stock.objects.get(id=queryset.stock_id)
         if queryset.approval == 'Pending':
             queryset.issue_by = str(request.user)
+            this_stock.quantity -= queryset.request_quantity
+            this_stock.save()
             queryset.approval = 'Approved'
             queryset.save()
-            messages.success(request, "Approved and Issued SUCCESSFULLY. " + str(queryset.quantity) + " " + str(
-                queryset.item_name) + "s now left in Store")
+            messages.success(request, "Approved and Issued SUCCESSFULLY. " + str(this_stock.quantity) + " " + str(
+                this_stock.item_name) + "s now left in Store")
             return redirect('request_list_history')
         elif queryset.approval == 'Rejected':
             messages.error(request, 'Approval previously Rejected')

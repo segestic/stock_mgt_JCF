@@ -18,12 +18,9 @@
               <th>CATEGORY</th>
               <th>ITEM NAME</th>
               <th>QUANTITY IN STORE</th>
-              <th>REQUEST QUANTITY</th>
-              <th>REQUESTED BY</th>
-              <th>APPROVED BY</th>
+              <th>RECEIVE QUANTITY</th>
+              <th>RECEIVED BY</th>
               <th>LAST UPDATED</th>
-              <th>APPROVAL STATUS</th>
-              <th>APPROVE</th>
             </tr>
           </thead>
         {% for instance in queryset %}
@@ -32,12 +29,9 @@
               <td>{{instance.category}}</td>
               <td>{{instance.item_name}}</td>
               <td>{{instance.quantity}}</td>
-              <td>{{instance.request_quantity}}</td>
-              <td>{{instance.request_by}}</td>
-              <td>{{instance.issue_by}}</td>
+              <td>{{instance.receive_quantity}}</td>
+              <td>{{instance.receive_by}}</td>
               <td>{{instance.last_updated}}</td>
-              <td>{{instance.approval}}</td>
-              <td><a href="{% url 'approve_items' instance.id %}"><div class="btn btn-info">Approve</div></a></td>
             </tr>
         {% endfor %}
       </table>

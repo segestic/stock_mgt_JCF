@@ -53,14 +53,15 @@
         <a class="nav-link" href="{% url 'register' %}">Register</a>
       </li>
       {% endif %}
-      {% if request.user.is_authenticated %}
+      {% if request.user.is_authenticated and request.user.is_teacher%}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'list_approval' %}">My Requests</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'select_item' %}">Make Request</a>
       </li>
-      {% if request.user.is_manager %}
+        {% endif %}
+      {% if request.user.is_authenticated and request.user.is_manager %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'list_item' %}">List Items</a>
       </li>
@@ -68,12 +69,11 @@
         <a class="nav-link" href="{% url 'add_items' %}">Add Items</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'list_history' %}">Purchase List History</a>
+        <a class="nav-link" href="{% url 'list_history' %}">Purchases </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'request_list_history' %}">Request List History</a>
+        <a class="nav-link" href="{% url 'request_list_history' %}">Requests</a>
       </li>
-      {% endif %}
       {% endif %}
 <!--      <li class="nav-item">-->
 <!--        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">disable</a>-->
@@ -100,7 +100,7 @@
   </div>
 </main>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-      <script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="/docs/4.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
+      <script>window.jQuery || document.write('<script src="/docs/4.4/assets/js/vendor/jquery.slim.min.js"><\/script>')</script><script src="{% static 'js/bootstrap.bundle.min.js' %}" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
   <script>
     setTimeout(function(){
       if ($('#msg').length > 0) {
