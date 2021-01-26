@@ -49,7 +49,7 @@ class StockRequestHistory(models.Model):
 	request_by = models.CharField(max_length=50, blank=True, null=True)
 	last_updated = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False, null=True)
-	approval = models.CharField(max_length=10, blank=False, null=False)
+	approval = models.CharField(max_length=10, blank=False, null=True)
 
 	def __str__(self):
 		return self.item_name
