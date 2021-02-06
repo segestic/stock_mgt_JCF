@@ -17,9 +17,11 @@
               <th>COUNT</th>
               <th>CATEGORY</th>
               <th>ITEM NAME</th>
+              <th>QUANTITY IN STORE</th>
               <th>REQUEST QUANTITY</th>
               <th>REQUESTED BY</th>
               <th>APPROVED BY</th>
+              <th>LAST UPDATED</th>
               <th>APPROVAL STATUS</th>
               <th>APPROVE</th>
             </tr>
@@ -27,19 +29,15 @@
         {% for instance in queryset %}
             <tr>
               <td>{{forloop.counter}}</td>
-              <td>{{instance.stock.category}}</td>
-              <td>{{instance.stock.item_name}}</td>
+              <td>{{instance.category}}</td>
+              <td>{{instance.item_name}}</td>
+              <td>{{instance.quantity}}</td>
               <td>{{instance.request_quantity}}</td>
               <td>{{instance.request_by}}</td>
-              <td>{{instance.approved_by}}</td>
-              <td>{{instance.approval1}}</td>
-              <td>
-                  {% if instance.approval1 == 'Pending' %}
-                  <a href="{% url 'approve_items' instance.id %}"><div class="btn btn-info">Approve</div></a>
-                  {% elif instance.approval1 == 'Approved' %}
-                  <a href="{% url 'approve_items' instance.id %}"><div class="btn btn-danger">Approve</div></a>
-                  {% endif %}
-              </td>
+              <td>{{instance.issue_by}}</td>
+              <td>{{instance.last_updated}}</td>
+              <td>{{instance.approval}}</td>
+              <td><a href="{% url 'approve_items' instance.id %}"><div class="btn btn-info">Approve</div></a></td>
             </tr>
         {% endfor %}
       </table>

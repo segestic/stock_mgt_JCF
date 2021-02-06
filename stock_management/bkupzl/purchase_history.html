@@ -26,12 +26,12 @@
         {% for instance in queryset %}
             <tr>
               <td>{{forloop.counter}}</td>
-              <td>{{instance.stock.category}}</td>
-              <td>{{instance.stock.item_name}}</td>
+              <td>{{instance.category}}</td>
+              <td>{{instance.item_name}}</td>
               <td>{{instance.quantity}}</td>
               <td>{{instance.receive_quantity}}</td>
               <td>{{instance.receive_by}}</td>
-              <td>{{instance.timestamp}}</td>
+              <td>{{instance.last_updated}}</td>
             </tr>
         {% endfor %}
       </table>

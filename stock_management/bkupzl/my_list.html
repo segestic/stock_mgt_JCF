@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
-{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
-<link href="{% static 'css/badge.css' %}" rel="stylesheet">
-
 {% if messages %}
     {% for message in messages %}
         <div class="alert {{ message.tags }} m-2" id="msg" role="alert">
@@ -16,7 +13,7 @@
 
 <form method='POST' action=''>{% csrf_token %}
 		{{form|crispy}}
-    <input class="btn btn-info" type="submit" value="Search" />
+    <input class="btn btn-info" type="submit" value="Save" />
     </form>
 
 <!--        <input type="submit" value='Search'/>-->
@@ -29,23 +26,21 @@
             <th>CATEGORY</th>
             <th>ITEM NAME</th>
             <th>REQUEST QUANTITY</th>
+            <th>REQUEST TIME</th>
             <th>APPROVED STATUS</th>
           </tr>
         </thead>
       {% for instance in queryset %}
           <tr>
             <td>{{forloop.counter}}</td>
-            <td>{{instance.stock.category}}</td>
-            <td>{{instance.stock.item_name}}</a></td>
-              <td>{{instance.request_quantity}}</td>
-            <td>{% if instance.approval1 == 'Pending' %}
-                <label class="badge badge-warning">{{instance.approval1}}</label>
-                {% elif instance.approval1 == 'Approved' %}
-                <label class="badge badge-success">{{instance.approval1}}</label>
-                {% else %}
-                <label class="badge badge-danger">{{instance.approval1}}</label>
-                {% endif %}
-            </td>
+            <td>{{instance.category}}</td>
+            <td>{{instance.item_name}}</a></td>
+            <td>{{instance.request_quantity}}</a></td>
+<!--            <td><a href="{% url 'reorder_level' instance.id %}">{{instance.reorder_level}}</a></td>-->
+            <td>{{instance.last_updated}}</td>
+            <td>{{instance.approval}}</td>
+<!--            <td>{{instance.last_updated}}</td>-->
+<!--            <td><a href="{% url 'delete_items' instance.id %}">Delete</a></td>-->
           </tr>
       {% endfor %}
     </table>

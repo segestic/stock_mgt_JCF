@@ -20,24 +20,30 @@ def home(request):
 
 @login_required
 def list_approval(request):
-    title = 'My Requests'
-    form = MakeRequestForm(request.POST or None)
+    title = 'List of Items'
+    form = StockSearchForm(request.POST or None)
+    # queryset1 = Stock.objects.all()
     # edit
     user = request.user
     queryset = StockRequestHistory.objects.filter(request_by=user)
-
-    if request.method == 'POST':
-        category = form['category'].value()
-        queryset = StockRequestHistory.objects.filter(
-            stock__item_name__icontains=form['item_name'].value()
-        )
-        if (category != ''):
-            queryset = queryset.filter(stock__category_id=category)
+    # queryset = StockRequestHistory.objects.filter(approval=True)
+    # if user is not None:
+    # if user is not Admin:
+    # queryset = queryset1.filter(approval=True)
+    # queryset = Stock.objects.filter(approval=True)
+    # return queryset
     context = {
         "form": form,
         "title": title,
         "queryset": queryset,
     }
+    if request.method == 'POST':
+        category = form['category'].value()
+        queryset = Stock.objects.filter(
+            item_name__icontains=form['item_name'].value()
+        )
+        if (category != ''):
+            queryset = queryset.filter(category_id=category)
     return render(request, "my_list.html", context)
 
 
@@ -81,42 +87,41 @@ def list_item(request):
         }
     return render(request, "list_item.html", context)
 
-
-# @login_required
-# def select_item (request):
-#     title = 'Make Request'
-#     form = MakeRequestForm(request.POST or None)
-#     queryset = Stock.objects.all()
-#     if request.method == 'POST':
-#         #category=form['field'].value() - it a function to get form field value
-#         category = form['category'].value()
-#         #joining two querysets togeher with filter - sql similtude of
-#         #select itemname.value() where TABLE Stock category_id = formvalue
-#         #so the category_id belongs is a foreignkey. know as ordinary id in category Table
-#         #category here is a the form value. #form['field'].value() function, #in quotes because its string
-#         #so once we use a foreignkey the items of the foreign key becomes part of the table (inheritance - inherits all).
-#         #so filter this table where querysetfield = value passed in from the form
-#         #QuerysetTotal = queryset1.filter(foreignkey[similarfield||not necessary fk]=formvalue)
-#         #not necessary fk so far it has the tablename before i.e category_id = tablecategory with the field id
-#         #icontans filters the text but because the new field is a pk. in the database table it is referenced with a key
-#         #in the database table the new field is not text, so we cannot use icontains. its a number - id referenced to a text in the category table
-#         #now we have two filters here because we are filtering based on two criteria from forms i.e (item_name and category)
-#         queryset = Stock.objects.filter(
-#             item_name__icontains=form['item_name'].value()
-#         )
-#         if (category != ''):
-#             queryset = queryset.filter(category_id=category)
-#     context = {
-#         "form": form,
-#         "title": title,
-#         "queryset": queryset,
-#     }
-#     return render(request, "select_item.html", context)
+@login_required
+def select_item (request):
+    title = 'Make Request'
+    form = MakeRequestForm(request.POST or None)
+    queryset = Stock.objects.all()
+    if request.method == 'POST':
+        #category=form['field'].value() - it a function to get form field value
+        category = form['category'].value()
+        #joining two querysets togeher with filter - sql similtude of
+        #select itemname.value() where TABLE Stock category_id = formvalue
+        #so the category_id belongs is a foreignkey. know as ordinary id in category Table
+        #category here is a the form value. #form['field'].value() function, #in quotes because its string
+        #so once we use a foreignkey the items of the foreign key becomes part of the table (inheritance - inherits all).
+        #so filter this table where querysetfield = value passed in from the form
+        #QuerysetTotal = queryset1.filter(foreignkey[similarfield||not necessary fk]=formvalue)
+        #not necessary fk so far it has the tablename before i.e category_id = tablecategory with the field id
+        #icontans filters the text but because the new field is a pk. in the database table it is referenced with a key
+        #in the database table the new field is not text, so we cannot use icontains. its a number - id referenced to a text in the category table
+        #now we have two filters here because we are filtering based on two criteria from forms i.e (item_name and category)
+        queryset = Stock.objects.filter(
+            item_name__icontains=form['item_name'].value()
+        )
+        if (category != ''):
+            queryset = queryset.filter(category_id=category)
+    context = {
+        "form": form,
+        "title": title,
+        "queryset": queryset,
+    }
+    return render(request, "select_item.html", context)
 
 @login_required
 @manager_only
 def add_items(request):
-    # StockCreateForm
+    #StockCreateForm
     form = StockCreateForm(request.POST or None)
     if form.is_valid():
         form.save()
@@ -127,7 +132,6 @@ def add_items(request):
         "title": "Add Item",
     }
     return render(request, "add_items.html", context)
-
 
 @login_required
 @manager_only
@@ -142,7 +146,6 @@ def add_category(request):
         "title": "Add Category",
     }
     return render(request, "add_items.html", context)
-
 
 @login_required
 @manager_only
@@ -177,8 +180,8 @@ def delete_items(request, pk):
         return redirect('list_item')
     return render(request, 'delete_items.html')
 
-
 @login_required
+# @manager_only
 def stock_detail(request, pk):
     queryset = Stock.objects.get(id=pk)
     context = {
@@ -202,18 +205,23 @@ def request_items(request, pk):
         # if the form is valid, then save into record the new issue quantity
         # then after saving the new issue quantity, subtract it from issue quantity by the code below
         # instance.quantity -= instance.issue_quantity
-        # instance.request_by = str(request.user)
-        messages.success(request, str(instance.item_name) + " " + "Requested SUCCESSFULLY and PENDING Approval. ")
+        instance.request_by = str(request.user)
+        messages.success(request, str(instance.item_name) + " " + "Requested SUCCESSFULLY. ")
         # instance.save()
         # here we are calling an entire model here StockHistory to write/record the following parameters into its own database
         request_history = StockRequestHistory(
-            stock=instance,
-            request_by=str(request.user),
+            #here it should be stock = queryset. Then u add stock as a fk in StockRequestHistory Model in models.py
+            stock_id=instance.id,
+            last_updated=instance.last_updated,
+            category=instance.category.name,
+            item_name=instance.item_name,
+            quantity=instance.quantity,
+            request_by=instance.request_by,
             request_quantity=instance.request_quantity,
-            approval1 = 'Pending',
+            approval = 'Pending',
         )
-        request_history.save()
         # here the new model is saving everything written to its database
+        request_history.save()
         return redirect('list_approval')
         # return redirect('/stock_detail/' + str(instance.id))
     # return HttpResponseRedirect(instance.get_absolute_url())
@@ -236,14 +244,16 @@ def receive_items(request, pk):
         # if form is valid, first save the instance temporarily (don't comit) then do calculation(substraction), then save the instance again
         instance = form.save(commit=False)
         instance.quantity += instance.receive_quantity
-        # instance.receive_by = str(request.user)
+        instance.receive_by = str(request.user)
         instance.save()
         receive_history = StockHistory(
             # stock_id=instance.id,
-            # last_updated=instance.last_updated,
-            stock=instance,
+            last_updated=instance.last_updated,
+            category=instance.category,
+            item_name=instance.item_name,
+            quantity=instance.quantity,
             receive_quantity=instance.receive_quantity,
-            receive_by=str(request.user)
+            receive_by=instance.receive_by
         )
         receive_history.save()
         messages.success(request, "Received SUCCESSFULLY. " + str(instance.quantity) + " " + str(
@@ -282,8 +292,8 @@ def reorder_level(request, pk):
 
 @login_required
 def list_history(request):
-    title = 'Purchases'
-    # receive history
+    title = 'LIST OF ITEMS'
+    #receive history
     queryset = StockHistory.objects.all()
     context = {
         "title": title,
@@ -291,19 +301,17 @@ def list_history(request):
     }
     return render(request, "purchase_history.html", context)
 
-
 @login_required
 # @manager_only
 def request_list_history(request):
     title = 'LIST OF ITEMS'
-    # receive history
+    #receive history
     queryset = StockRequestHistory.objects.all()
     context = {
         "title": title,
         "queryset": queryset,
     }
     return render(request, "list_history.html", context)
-
 
 from itertools import chain
 
@@ -314,134 +322,22 @@ def approve_items(request, pk):
     # this_stock = Stock.objects.get(id=pk)
     if request.method == 'POST':
         queryset = StockRequestHistory.objects.get(id=pk)
-        # ap =  Approval.object.get(stockrequest_id=queryset)
         this_stock = Stock.objects.get(id=queryset.stock_id)
-        #just 1 made the diffrence in code below - Thank you JESUS
-        if queryset.request_quantity <= this_stock.quantity:
-            if queryset.approval1 == 'Pending':
-                this_stock.quantity -= queryset.request_quantity
-                this_stock.save()
-                queryset.approval1 = 'Approved'
-                queryset.approved_by = str(request.user)
-                queryset.save()
-                messages.success(request, "Approved and Issued SUCCESSFULLY. " + str(this_stock.quantity) + " " + str(
-                    this_stock.item_name) + "s now left in Store")
-                return redirect('request_list_history')
-            elif queryset.approval1 == 'Rejected':
-                messages.error(request, 'Approval previously Rejected')
-                pass
-            else:
-                messages.error(request, 'Previously Approved')
-                pass
-                return redirect('request_list_history')
+        if queryset.approval == 'Pending':
+            queryset.issue_by = str(request.user)
+            this_stock.quantity -= queryset.request_quantity
+            this_stock.save()
+            queryset.approval = 'Approved'
             queryset.save()
-        else:
-            messages.error(request, 'Quantity Requested more than Available Stock')
+            messages.success(request, "Approved and Issued SUCCESSFULLY. " + str(this_stock.quantity) + " " + str(
+                this_stock.item_name) + "s now left in Store")
             return redirect('request_list_history')
+        elif queryset.approval == 'Rejected':
+            messages.error(request, 'Approval previously Rejected')
             pass
-    return render(request, 'approve_items.html')
-
-# ajax
-def load_item_name(request):
-    category_id = request.GET.get('category_id')
-    item_names = Stock.objects.filter(category_id=category_id).all()
-    return render(request, 'item_name_dropdown_list_options.html', {'item_names': item_names})
-
-
-######temp
-# @login_required
-# @manager_only
-# def list_item(request):
-#     form = StockSearchForm()
-#     queryset = Stock.objects.all()
-#     if request.method == 'POST':
-#         # category = form.data.get('category')
-#         category = form['category'].value()
-#         print(category)
-#         # if (category != ''):
-#         #     form.fields['item_name'].queryset = Stock.objects.filter(category_id=2)
-#         # form = StockSearchForm(request.POST)
-#         # if form.is_valid():
-#             # form.save()
-#             # return redirect('list_item')
-#     return render(request, "list_item.html", {'form': form})
-#########
-
-#duplicate - testing filter
-@login_required
-@teacher_only
-def select_item(request):
-    title = 'Make Request'
-    form = MakeRequestForm(request.POST or None)
-    queryset = Stock.objects.all()
-    if request.method == 'POST':
-        item = request.POST.get('item_name')
-        cat = request.POST.get('category')
-        print(item)
-        print(cat)
-        q1 = Stock.objects.filter(
-            item_name__icontains=item)
-        if (cat != ''):
-            queryset = q1.filter(category=cat)
-    context = {
-        "form": form,
-        "title": title,
-        "queryset": queryset,
-    }
-    return render(request, "select_item.html", context)
-
-
-# 2222222222
-#search modified
-from django.db.models import Q
-@login_required
-def search(request):
-    title = 'Search'
-    # form = SearchForm(request.POST or None)
-    if request.method == 'POST':
-        q = request.POST.get('search', '')
-        if q:
-            queryset = Stock.objects.filter(Q(item_name__icontains=q) | Q(category__name__icontains=q)).distinct()
-            count = queryset.count()
-            context = {
-                # "form": form,
-                "title": title,
-                "query": q,
-                "results": queryset,
-                "count": count
-            }
-            return render(request, 'search.html', context)
         else:
-            messages.error(request, 'No search Input')
+            messages.error(request, 'Previously Approved')
             pass
-    return redirect ('/')
-
-# #search previous
-# from django.db.models import Q
-# @login_required
-# def search(request):
-#     title = 'Search'
-#     form = SearchForm(request.POST or None)
-#     if request.method == 'POST':
-#         # q = form.data['search']
-#         q = request.POST.get('search', '')
-#         # cat = request.POST.get('category')
-#         # print(item) #my_debug
-#         # print(cat) #my_debug
-#         if q:
-#             # (q != ''):
-#             queryset = Stock.objects.filter(Q(item_name__icontains=q) | Q(category__name__icontains=q)).distinct()
-#             count = queryset.count()
-#         else:
-#             # redirect ('home')
-#             #this is done to prevent errors if tthe error (queryset| count referenced before assignt if and empty form is posted)
-#             queryset = []
-#             count = []
-#     context = {
-#         "form": form,
-#         "title": title,
-#         "query": q,
-#         "results": queryset,
-#         "count": count
-#     }
-#     return render(request, 'search.html', context)
+            return redirect('request_list_history')
+        queryset.save()
+    return render(request, 'approve_items.html')

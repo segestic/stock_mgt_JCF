@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import django_heroku
 from django.contrib.messages import constants as messages
-
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -85,28 +85,33 @@ STATIC_URL = '/static/'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'HSS',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
-
+#
+# # Database
+# # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# # load database from the DATABASE_URL environment variable
+# #newseg
+# DATABASES = {}
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600)
+# ####
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'HSS',
+#         'USER': 'postgres',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
 #     }
 # }
+
+
 
 # DATABASES = {
 #     'default': {

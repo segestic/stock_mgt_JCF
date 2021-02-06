@@ -1,5 +1,4 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
@@ -20,7 +19,7 @@ def teacher_only(view_func):
         if request.user.is_teacher:
             return view_func(request, *args, **kwargs)
         else:
-            return redirect('/')
+            return HttpResponseRedirect(reverse('/'))
     return wrap
 
 def manager_only(view_func):

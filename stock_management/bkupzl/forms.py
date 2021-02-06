@@ -26,24 +26,9 @@ class StockCreateForm(forms.ModelForm):
 
 class StockSearchForm(forms.ModelForm):
     export_to_CSV = forms.BooleanField(required=False)
-    # item_name  = forms.ModelChoiceField(queryset=Stock.objects.all())
-    # item_name  = forms.ModelChoiceField(queryset=Stock.objects.filter(category_id=))
-
     class Meta:
         model = Stock
         fields = ['category', 'item_name']
-#
-# ########seg
-#         def __init__(self, *args, **kwargs):
-#             super().__init__(*args, **kwargs)
-#             ####
-#
-#             category1 = self['category'].value()
-#             if (category1 != ''):
-#                 item_name  = forms.ModelChoiceField(queryset=Stock.objects.filter(category_id=category1))
-
-class SearchForm(forms.Form):
-    search = forms.CharField(help_text="Type to Search")
 
 
 class CategoryCreateForm(forms.ModelForm):
@@ -61,17 +46,6 @@ class CategoryCreateForm(forms.ModelForm):
                 raise forms.ValidationError(str(name) + ' is already created')
         return name
 
-# def clean_name(self):
-    #     print(type(self.cleaned_data))
-    #     name = self.cleaned_data.get('name')
-    #
-    #     with open("HSS/names.txt", 'r') as f:
-    #         names = f.read().splitlines()
-    #
-    #     for whatever in names:
-    #         if whatever in name:
-    #             raise forms.ValidationError("You're trying to SPAM ME with %s" % whatever)
-    #     return name
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:

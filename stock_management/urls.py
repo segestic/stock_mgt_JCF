@@ -3,9 +3,10 @@ from django.urls import path
 
 
 urlpatterns = [
-    # path('', views.home, name='home'),
+    ## path('', views.home, name='home'),
     path('list_item/', views.list_item, name='list_item'),
     path('add_items/', views.add_items, name='add_items'),
+    path('search/', views.search, name='search'),
     path('add_category/', views.add_category, name='add_category'),
     path('select_item/', views.select_item, name="select_item"),
     path('update_items/<str:pk>/', views.update_items, name="update_items"),
@@ -18,4 +19,6 @@ urlpatterns = [
     path('reorder_level/<str:pk>/', views.reorder_level, name="reorder_level"),
     path('list_history/', views.list_history, name='list_history'),
     path('request_list_history/', views.request_list_history, name='request_list_history'),
+    path('load_item_name/', views.load_item_name, name='ajax_load_item_name'), # AJAX
+    ## path('ajax/load_item_name/', views.load_item_name, name='ajax_load_item_name'), # AJAX
 ]

@@ -11,12 +11,10 @@
 {% endif %}
 <div class="header"{{title}}> </div>
 
-<form method='POST' action=''>
-        {% csrf_token %}
+<form method='POST' action=''>{% csrf_token %}
 		{{form|crispy}}
     <input class="btn btn-info" type="submit" value="Search" />
     </form>
-<!--<form method="post" id="categoryForm" data-item_name-url="{% url 'ajax_load_item_name' %}">-->
 <!--        <input type="submit" value='Search'/>-->
 
 <br>
@@ -62,28 +60,5 @@
 
     </table>
 </div><!--End of display table-->
-
-
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-
-<script>
-    $("#id_category").change(function () {
-      var url = $("#categoryForm").attr("data-item_name-url");
-      var categoryId = $(this).val();
-
-      $.ajax({
-        url: url,
-        data: {
-          'category': categoryId
-        },
-        success: function (data) {
-          $("#id_item_name").html(data);
-        }
-      });
-
-    });
-  </script>
-
-
 
 {% endblock %}
