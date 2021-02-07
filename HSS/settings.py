@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
 from pathlib import Path
-import django_heroku
 from django.contrib.messages import constants as messages
-import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -88,7 +86,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db1.sqlite3')
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
 
@@ -163,6 +161,7 @@ STATIC_URL = '/static/'
 # REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
 # SITE_ID = 1
 # LOGIN_REDIRECT_URL = '/'
+#
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -171,6 +170,3 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
