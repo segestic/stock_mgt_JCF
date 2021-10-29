@@ -1,7 +1,7 @@
 # stock_mgt_JCF
 
 <h1 align="center">Hi 👋, I'm Olusegun Oladele</h1>
-<h3 align="center">A ML enthusiast and backend developer</h3>
+<h3 align="center">A Machine Learning enthusiast and backend developer</h3>
 
 - 🔭 I’m currently working on **Hospital Management System**
 
