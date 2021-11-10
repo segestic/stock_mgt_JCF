@@ -5,7 +5,7 @@
 
 - 🔭 I’m currently working on **Hospital Management System**
 
-- 🌱 I’m currently learning **vue**
+- 🌱 I’m currently learning **More Advanced Deep Learning Algorithms**
 
 - 📫 How to reach me **olusegunodewole1@gmail.com**
 
